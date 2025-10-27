@@ -18,18 +18,6 @@ lp3-taller2
 ├── README.md            # Este archivo, documentación completa del proyecto
 ├── .env                 # Variables de entorno (desarrollo, pruebas, producción)
 ├── .gitignore           # Archivos y directorios a ignorar por Git
-<<<<<<< HEAD
-├── app.py               # Script principal para ejecutar la aplicación
-├── instance
-│   └── musica.db        # Base de Datos
-├── musica_api
-│   ├── __init__.py      # Inicialización del módulo
-│   ├── api_models.py    # Modelos de API para serialización/deserialización usando Flask-RESTX
-│   ├── config.py        # Configuraciones para diferentes entornos (desarrollo, pruebas, producción)
-│   ├── extensions.py    # Definición de Extensiones Flask (API, SQLAlchemy)
-│   ├── models.py        # Modelos de datos usando SQLAlchemy
-│   └── resources.py     # Recursos y endpoints de la API
-=======
 ├── main.py              # Script principal para ejecutar la aplicación
 ├── peliculas.db         # Base de Datos SQLite
 ├── app
@@ -43,7 +31,6 @@ lp3-taller2
 │       ├── usuarios.py  # Endpoints de usuarios
 │       ├── peliculas.py # Endpoints de películas
 │       └── favoritos.py # Endpoints de favoritos
->>>>>>> 63ef2bd (chore: actualizar a Películas)
 ├── requirements.txt     # Dependencias del proyecto
 ├── tests
 │   └── test_api.py      # Pruebas Unitarias
