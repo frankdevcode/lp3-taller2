@@ -1,15 +1,15 @@
-# API de Música
+# API de Películas
 
-Una [API RESTful](https://aws.amazon.com/es/what-is/restful-api/) para gestionar usuarios, canciones y relaciones de favoritos. Desarrollada con [Flask](https://flask.palletsprojects.com/en/stable/), [Flask-RESTX](https://flask-restx.readthedocs.io/en/latest/), [Flask-SQLAlchemy](https://flask-sqlalchemy.readthedocs.io/en/stable/) y [SQLAlchemy](https://www.sqlalchemy.org/).
+Una [API RESTful](https://aws.amazon.com/es/what-is/restful-api/) para gestionar usuarios, películas y favoritos. Desarrollada con [FastAPI](https://fastapi.tiangolo.com/), [SQLModel](https://sqlmodel.tiangolo.com/) y [Pydantic](https://docs.pydantic.dev/).
 
 ## Descripción
 
 Esta API permite administrar:
 - **Usuarios**: crear y gestionar perfiles de usuarios.
-- **Canciones**: agregar, actualizar y eliminar canciones con sus metadatos.
-- **Favoritos**: gestionar las canciones favoritas de cada usuario.
+- **Películas**: agregar, actualizar y eliminar películas con sus metadatos.
+- **Favoritos**: gestionar las películas favoritas de cada usuario.
 
-El proyecto incluye una interfaz de documentación interactiva generada automáticamente con [Swagger](https://swagger.io/) disponible en el *endpoint* `/docs`.
+El proyecto incluye una interfaz de documentación interactiva generada automáticamente disponible en los *endpoints* `/docs` (Swagger UI) y `/redoc` (ReDoc).
 
 ## Estructura del Proyecto
 
@@ -18,6 +18,7 @@ lp3-taller2
 ├── README.md            # Este archivo, documentación completa del proyecto
 ├── .env                 # Variables de entorno (desarrollo, pruebas, producción)
 ├── .gitignore           # Archivos y directorios a ignorar por Git
+<<<<<<< HEAD
 ├── app.py               # Script principal para ejecutar la aplicación
 ├── instance
 │   └── musica.db        # Base de Datos
@@ -28,6 +29,21 @@ lp3-taller2
 │   ├── extensions.py    # Definición de Extensiones Flask (API, SQLAlchemy)
 │   ├── models.py        # Modelos de datos usando SQLAlchemy
 │   └── resources.py     # Recursos y endpoints de la API
+=======
+├── main.py              # Script principal para ejecutar la aplicación
+├── peliculas.db         # Base de Datos SQLite
+├── app
+│   ├── __init__.py      # Inicialización del módulo
+│   ├── config.py        # Configuraciones para diferentes entornos
+│   ├── database.py      # Configuración de la base de datos y sesión
+│   ├── models.py        # Modelos de datos usando SQLModel
+│   ├── schemas.py       # Esquemas Pydantic para validación y serialización
+│   └── routers
+│       ├── __init__.py
+│       ├── usuarios.py  # Endpoints de usuarios
+│       ├── peliculas.py # Endpoints de películas
+│       └── favoritos.py # Endpoints de favoritos
+>>>>>>> 63ef2bd (chore: actualizar a Películas)
 ├── requirements.txt     # Dependencias del proyecto
 ├── tests
 │   └── test_api.py      # Pruebas Unitarias
@@ -42,20 +58,21 @@ lp3-taller2
    - correo: Correo electrónico (único)
    - fecha_registro: Fecha de registro
 
-2. **Canción**:
+2. **Película**:
    - id: Identificador único
-   - titulo: Título de la canción
-   - artista: Artista o intérprete
-   - album: Álbum al que pertenece
-   - duracion: Duración en segundos
-   - año: Año de lanzamiento
-   - genero: Género musical
+   - titulo: Título de la película
+   - director: Director de la película
+   - genero: Género cinematográfico
+   - duracion: Duración en minutos
+   - año: Año de estreno
+   - clasificacion: Clasificación por edad (G, PG, PG-13, R, etc.)
+   - sinopsis: Breve descripción de la trama
    - fecha_creacion: Fecha de creación del registro
 
 3. **Favorito**:
    - id: Identificador único
    - id_usuario: ID del usuario (clave foránea)
-   - id_cancion: ID de la canción (clave foránea)
+   - id_pelicula: ID de la película (clave foránea)
    - fecha_marcado: Fecha en que se marcó como favorito
 
 ## Instalación
@@ -87,12 +104,13 @@ lp3-taller2
 1. Ejecuta la aplicación:
 
    ```bash
-   flask run
+   uvicorn main:app --reload
    ```
 
 2. Accede a la aplicación:
-   - API: [http://127.0.0.1:5000/api/](http://127.0.0.1:5000/api/)
-   - Documentación *Swagger*: [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/docs)
+   - API: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   - Documentación *Swagger UI*: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+   - Documentación *ReDoc*: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ## Uso de la API
 
@@ -104,14 +122,14 @@ lp3-taller2
 - **Actualizar usuario**: `PUT /api/usuarios/{id}`
 - **Eliminar usuario**: `DELETE /api/usuarios/{id}`
 
-### Canciones
+### Películas
 
-- **Listar canciones**: `GET /api/canciones`
-- **Crear canción**: `POST /api/canciones`
-- **Obtener canción**: `GET /api/canciones/{id}`
-- **Actualizar canción**: `PUT /api/canciones/{id}`
-- **Eliminar canción**: `DELETE /api/canciones/{id}`
-- **Buscar canciones**: `GET /api/canciones/buscar?titulo=value&artista=value&genero=value`
+- **Listar películas**: `GET /api/peliculas`
+- **Crear película**: `POST /api/peliculas`
+- **Obtener película**: `GET /api/peliculas/{id}`
+- **Actualizar película**: `PUT /api/peliculas/{id}`
+- **Eliminar película**: `DELETE /api/peliculas/{id}`
+- **Buscar películas**: `GET /api/peliculas/buscar?titulo=value&director=value&genero=value&año=value`
 
 ### Favoritos
 
@@ -120,18 +138,18 @@ lp3-taller2
 - **Obtener favorito**: `GET /api/favoritos/{id}`
 - **Eliminar favorito**: `DELETE /api/favoritos/{id}`
 - **Listar favoritos de usuario**: `GET /api/usuarios/{id}/favoritos`
-- **Marcar favorito específico**: `POST /api/usuarios/{id_usuario}/favoritos/{id_cancion}`
-- **Eliminar favorito específico**: `DELETE /api/usuarios/{id_usuario}/favoritos/{id_cancion}`
+- **Marcar favorito específico**: `POST /api/usuarios/{id_usuario}/favoritos/{id_pelicula}`
+- **Eliminar favorito específico**: `DELETE /api/usuarios/{id_usuario}/favoritos/{id_pelicula}`
 
 ## Desarrollo del Taller
 
 1. Ajustar este `README.md` con los datos del Estudiante
 
-2. Utilizando [DBeaver](https://dbeaver.io/), adiciona 5 usuarios y 10 canciones, directo a las tablas.
+2. Utilizando [DBeaver](https://dbeaver.io/), adiciona 5 usuarios y 10 películas, directo a las tablas.
 
 3. Busca todos los comentarios `# TODO`, realiza los ajustes necesarios, y ejecuta un `commit` por cada uno.
 
-4. Prueba el funcionamiento del API, desde la documentación *Swagger*.
+4. Prueba el funcionamiento del API, desde la documentación *Swagger UI* o *ReDoc*.
 
 5. Implementar una (1) de las sugerencias que se presentan a continuación.
 
@@ -139,7 +157,7 @@ lp3-taller2
 
 1. **Autenticación y autorización**: Implementar JWT o OAuth2 para proteger los endpoints y asociar los usuarios automáticamente con sus favoritos.
 
-2. **Paginación**: Añadir soporte para paginación en las listas de canciones, usuarios y favoritos para mejorar el rendimiento con grandes volúmenes de datos.
+2. **Paginación**: Añadir soporte para paginación en las listas de películas, usuarios y favoritos para mejorar el rendimiento con grandes volúmenes de datos.
 
 3. **Validación de datos**: Implementar validación más robusta de datos de entrada utilizando bibliotecas como Marshmallow o Pydantic.
 
@@ -153,7 +171,11 @@ lp3-taller2
 
 8. **Caché**: Añadir caché para mejorar la velocidad de respuesta en consultas frecuentes.
 
-9. **Estadísticas de uso**: Implementar un sistema de seguimiento para analizar qué canciones son más populares y sugerir recomendaciones basadas en preferencias similares.
+9. **Sistema de valoraciones**: Implementar un sistema que permita a los usuarios calificar películas con estrellas y dejar reseñas.
 
-10. **Subida de archivos**: Permitir la subida de archivos de audio y gestionar su almacenamiento en un servicio como S3 o similar.
+10. **Recomendaciones inteligentes**: Desarrollar un algoritmo de recomendación basado en las películas favoritas y valoraciones de usuarios con gustos similares.
+
+11. **Integración con APIs externas**: Conectar con APIs como TMDB (The Movie Database) u OMDB para obtener información adicional, posters y tráilers.
+
+12. **Listas personalizadas**: Permitir a los usuarios crear listas temáticas personalizadas más allá de favoritos (por ejemplo: "Pendientes por ver", "Clásicos", "Para ver en familia").
 
