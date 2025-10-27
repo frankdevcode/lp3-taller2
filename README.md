@@ -103,36 +103,46 @@ lp3-taller2
 
 ### Usuarios
 
-- **Listar usuarios**: `GET /api/usuarios`
-- **Crear usuario**: `POST /api/usuarios`
-- **Obtener usuario**: `GET /api/usuarios/{id}`
-- **Actualizar usuario**: `PUT /api/usuarios/{id}`
-- **Eliminar usuario**: `DELETE /api/usuarios/{id}`
+- GET `/` - Listar usuarios con paginación
+- POST `/` - Crear usuario con validación de correo único
+- GET `/{usuario_id}` - Obtener usuario específico
+- PUT `/{usuario_id}` - Actualizar usuario
+- DELETE `/{usuario_id}` - Eliminar usuario
+- GET `/{usuario_id}/favoritos` - Listar favoritos del usuario
+- POST `/{usuario_id}/favoritos/{pelicula_id}` - Marcar favorito
+- DELETE `/{usuario_id}/favoritos/{pelicula_id}` - Eliminar favorito
+- GET `/{usuario_id}/estadisticas` - Estadísticas (opcional)
 
 ### Películas
 
-- **Listar películas**: `GET /api/peliculas`
-- **Crear película**: `POST /api/peliculas`
-- **Obtener película**: `GET /api/peliculas/{id}`
-- **Actualizar película**: `PUT /api/peliculas/{id}`
-- **Eliminar película**: `DELETE /api/peliculas/{id}`
-- **Buscar películas**: `GET /api/peliculas/buscar?titulo=value&director=value&genero=value&año=value`
+- GET `/` - Listar películas con paginación
+- POST `/` - Crear película con validación de duplicados
+- GET `/{pelicula_id}` - Obtener película específica
+- PUT `/{pelicula_id}` - Actualizar película
+- DELETE `/{pelicula_id}` - Eliminar película
+- GET `/buscar/` - Búsqueda avanzada (título, director, género, año)
+- GET `/populares/top` - Películas más populares (opcional)
+- GET `/clasificacion/{clasificacion}` - Por clasificación (opcional)
+- GET `/recientes/nuevas` - Películas recientes (opcional)
 
 ### Favoritos
 
-- **Listar favoritos**: `GET /api/favoritos`
-- **Marcar favorito**: `POST /api/favoritos`
-- **Obtener favorito**: `GET /api/favoritos/{id}`
-- **Eliminar favorito**: `DELETE /api/favoritos/{id}`
-- **Listar favoritos de usuario**: `GET /api/usuarios/{id}/favoritos`
-- **Marcar favorito específico**: `POST /api/usuarios/{id_usuario}/favoritos/{id_pelicula}`
-- **Eliminar favorito específico**: `DELETE /api/usuarios/{id_usuario}/favoritos/{id_pelicula}`
+- GET `/` - Listar todos los favoritos
+- POST `/` - Crear favorito con validaciones
+- GET `/{favorito_id}` - Obtener favorito con detalles
+- DELETE `/{favorito_id}` - Eliminar favorito
+- GET `/usuario/{usuario_id}` - Favoritos por usuario
+- GET `/pelicula/{pelicula_id}` - Favoritos por película
+- GET `/verificar/{usuario_id}/{pelicula_id}` - Verificar favorito (opcional)
+- GET `/estadisticas/generales` - Estadísticas globales (opcional)
+- DELETE `/usuario/{usuario_id}/todos` - Eliminar todos los favoritos (opcional)
+- GET `/recomendaciones/{usuario_id}` - Sistema de recomendaciones (opcional)
 
 ## Desarrollo del Taller
 
 1. Ajustar este `README.md` con los datos del Estudiante
 
-2. Utilizando [DBeaver](https://dbeaver.io/), adiciona 5 usuarios y 10 películas, directo a las tablas.
+2. Utilizando [DBeaver](https://dbeaver.io/), y el _script_ `init_db.sql` adiciona datos directo a las tablas.
 
 3. Busca todos los comentarios `# TODO`, realiza los ajustes necesarios, y ejecuta un `commit` por cada uno.
 
