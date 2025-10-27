@@ -1,0 +1,18 @@
+# FastAPI Framework y dependencias core
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+
+# Base de datos y ORM
+sqlmodel
+sqlalchemy
+
+# Validación y utilidades
+python-multipart
+python-dotenv
+
+# Testing
+pytest
+pytest-asyncio
+httpx
