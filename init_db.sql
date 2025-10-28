@@ -1,9 +1,51 @@
 -- ============================================
--- Script SQL para poblar la base de datos
 -- Base de datos: SQLite (peliculas.db)
 -- ============================================
 
--- Insertar 5 Usuarios
+-- Tabla Usuario
+CREATE TABLE usuario (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(150) NOT NULL UNIQUE,
+    fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Índices para Usuario
+CREATE INDEX ix_usuario_nombre ON usuario (nombre);
+CREATE INDEX ix_usuario_correo ON usuario (correo);
+
+-- Tabla Pelicula
+CREATE TABLE pelicula (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titulo VARCHAR(200) NOT NULL,
+    director VARCHAR(150) NOT NULL,
+    genero VARCHAR(100) NOT NULL,
+    duracion INTEGER NOT NULL,
+    año INTEGER NOT NULL CHECK (año >= 1888 AND año <= 2100),
+    clasificacion VARCHAR(10) NOT NULL,
+    sinopsis VARCHAR(1000),
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Índice para Pelicula
+CREATE INDEX ix_pelicula_titulo ON pelicula (titulo);
+
+-- Tabla Favorito (Tabla de unión)
+CREATE TABLE favorito (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_usuario INTEGER NOT NULL,
+    id_pelicula INTEGER NOT NULL,
+    fecha_marcado DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Claves Foráneas
+    FOREIGN KEY (id_usuario) REFERENCES usuario (id),
+    FOREIGN KEY (id_pelicula) REFERENCES pelicula (id),
+    
+    -- Restricción única para evitar duplicados
+    CONSTRAINT unique_user_movie UNIQUE (id_usuario, id_pelicula)
+);
+
+-- Insertar Usuarios
 INSERT INTO usuario (nombre, correo, fecha_registro) VALUES
 ('María García', 'maria.garcia@email.com', datetime('now')),
 ('Juan Pérez', 'juan.perez@email.com', datetime('now')),
@@ -11,7 +53,7 @@ INSERT INTO usuario (nombre, correo, fecha_registro) VALUES
 ('Carlos Rodríguez', 'carlos.rodriguez@email.com', datetime('now')),
 ('Laura Fernández', 'laura.fernandez@email.com', datetime('now'));
 
--- Insertar 10 Películas
+-- Insertar Películas
 INSERT INTO pelicula (titulo, director, genero, duracion, año, clasificacion, sinopsis, fecha_creacion) VALUES
 ('El Padrino', 'Francis Ford Coppola', 'Drama, Crimen', 175, 1972, 'R',
  'La historia de una familia mafiosa italiana y su lucha por mantener el poder en el mundo del crimen organizado.',
@@ -44,7 +86,7 @@ INSERT INTO pelicula (titulo, director, genero, duracion, año, clasificacion, s
  'Mientras se esfuerzan por triunfar en sus carreras artísticas, un pianista de jazz y una aspirante a actriz se enamoran.',
  datetime('now');
 
--- Insertar algunos favoritos de ejemplo
+-- Insertar favoritos de ejemplo
 INSERT INTO favorito (id_usuario, id_pelicula, fecha_marcado) VALUES
 (1, 1, datetime('now')),
 (1, 5, datetime('now')),
