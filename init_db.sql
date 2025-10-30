@@ -1,23 +1,31 @@
--- ============================================
--- Base de datos: SQLite (peliculas.db)
--- ============================================
+-- Eliminar tablas existentes
+DROP TABLE IF EXISTS favorito;
+DROP TABLE IF EXISTS usuario;
+DROP TABLE IF EXISTS pelicula;
 
--- Tabla Usuario
-CREATE TABLE usuario (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre VARCHAR(100) NOT NULL,
-    correo VARCHAR(150) NOT NULL UNIQUE,
-    fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+-- Datos de prueba
+-- Usuarios
+INSERT INTO usuario (nombre, correo, fecha_registro) VALUES
+('Ana García', 'ana.garcia@email.com', CURRENT_TIMESTAMP),
+('Juan Pérez', 'juan.perez@email.com', CURRENT_TIMESTAMP),
+('María López', 'maria.lopez@email.com', CURRENT_TIMESTAMP);
 
--- Índices para Usuario
-CREATE INDEX ix_usuario_nombre ON usuario (nombre);
-CREATE INDEX ix_usuario_correo ON usuario (correo);
+-- Películas
+INSERT INTO pelicula (titulo, director, genero, duracion, año, clasificacion, sinopsis, fecha_creacion) VALUES
+('Inception', 'Christopher Nolan', 'Ciencia Ficción', 148, 2010, 'PG-13', 'Un ladrón con la rara habilidad de "extracción" de datos del subconsciente durante el sueño...', CURRENT_TIMESTAMP),
+('The Shawshank Redemption', 'Frank Darabont', 'Drama', 142, 1994, 'R', 'Un banquero es sentenciado a cadena perpetua en Shawshank por el asesinato de su esposa...', CURRENT_TIMESTAMP),
+('The Dark Knight', 'Christopher Nolan', 'Acción', 152, 2008, 'PG-13', 'Batman se enfrenta a su mayor enemigo: el Joker...', CURRENT_TIMESTAMP),
+('Pulp Fiction', 'Quentin Tarantino', 'Crimen', 154, 1994, 'R', 'Varias historias se entrelazan en el bajo mundo del crimen en Los Ángeles...', CURRENT_TIMESTAMP),
+('The Matrix', 'Lana y Lilly Wachowski', 'Ciencia Ficción', 136, 1999, 'R', 'Un programador descubre que el mundo que conoce es una simulación...', CURRENT_TIMESTAMP);
 
--- Tabla Pelicula
-CREATE TABLE pelicula (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    titulo VARCHAR(200) NOT NULL,
+-- Favoritos
+INSERT INTO favorito (id_usuario, id_pelicula, fecha_marcado) VALUES
+(1, 1, CURRENT_TIMESTAMP),  -- Ana - Inception
+(1, 3, CURRENT_TIMESTAMP),  -- Ana - The Dark Knight
+(2, 2, CURRENT_TIMESTAMP),  -- Juan - Shawshank
+(2, 4, CURRENT_TIMESTAMP),  -- Juan - Pulp Fiction
+(3, 5, CURRENT_TIMESTAMP),  -- María - Matrix
+(3, 1, CURRENT_TIMESTAMP);  -- María - Inception
     director VARCHAR(150) NOT NULL,
     genero VARCHAR(100) NOT NULL,
     duracion INTEGER NOT NULL,
