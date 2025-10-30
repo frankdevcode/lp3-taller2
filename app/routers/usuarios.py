@@ -111,10 +111,7 @@ def delete_usuario(usuario_id: int, session: Session = Depends(get_session)):
     session.delete(usuario)
     session.commit()
     return None
-router = APIRouter(
-    prefix="/api/usuarios",
-    tags=["Usuarios"]
-)
+
 
 
 # TODO: Endpoint para listar todos los usuarios

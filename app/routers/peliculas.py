@@ -11,10 +11,7 @@ from app.database import get_session
 from app.models import Pelicula, Favorito
 from app.schemas import PeliculaCreate, PeliculaRead, PeliculaUpdate
 
-router = APIRouter(
-    prefix="/peliculas",
-    tags=["películas"]
-)
+
 
 @router.post("/", response_model=PeliculaRead, status_code=status.HTTP_201_CREATED)
 def create_pelicula(pelicula: PeliculaCreate, session: Session = Depends(get_session)):
