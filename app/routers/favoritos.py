@@ -9,11 +9,7 @@ from typing import List
 
 from app.database import get_session
 from app.models import Favorito, Usuario, Pelicula
-from app.schemas import (
-    FavoritoCreate,
-    FavoritoRead,
-    FavoritoWithDetails
-)
+from app.schemas import FavoritoCreate, FavoritoRead
 
 router = APIRouter(
     prefix="/usuarios/{usuario_id}/favoritos",

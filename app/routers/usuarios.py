@@ -8,13 +8,11 @@ from sqlmodel import Session, select
 from typing import List
 
 from app.database import get_session
-from app.models import Usuario, Favorito, Pelicula
+from app.models import Usuario
 from app.schemas import (
     UsuarioCreate,
     UsuarioRead,
-    UsuarioUpdate,
-    UsuarioWithFavoritos,
-    PeliculaRead
+    UsuarioUpdate
 )
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
@@ -114,90 +112,7 @@ def delete_usuario(usuario_id: int, session: Session = Depends(get_session)):
 
 
 
-# TODO: Endpoint para listar todos los usuarios
-@router.get("/", response_model=List[UsuarioRead])
-def listar_usuarios(
-    session: Session = Depends(get_session),
-    skip: int = 0,
-    limit: int = 100
-):
-    """
-    Lista todos los usuarios registrados.
-    
-    - **skip**: Número de registros a omitir (para paginación)
-    - **limit**: Número máximo de registros a retornar
-    """
-    # TODO: Consultar todos los usuarios con paginación
 
-    return usuarios
-
-
-# TODO: Endpoint para crear un nuevo usuario
-@router.post("/", response_model=UsuarioRead, status_code=status.HTTP_201_CREATED)
-def crear_usuario(
-    usuario: UsuarioCreate,
-    session: Session = Depends(get_session)
-):
-    """
-    Crea un nuevo usuario en la plataforma.
-    
-    - **nombre**: Nombre del usuario
-    - **correo**: Correo electrónico único
-    """
-    # TODO: Verificar que el correo no exista
-    statement = 
-    existing_user = 
-    
-    # TODO: Crear el nuevo usuario
-    db_usuario = Usuario.model_validate(usuario)
-    
-    return db_usuario
-
-
-# TODO: Endpoint para obtener un usuario por ID
-@router.get("/{usuario_id}", response_model=UsuarioRead)
-def obtener_usuario(
-    usuario_id: int,
-    session: Session = Depends(get_session)
-):
-    """
-    Obtiene un usuario específico por su ID.
-    
-    - **usuario_id**: ID del usuario
-    """
-    # TODO: Buscar el usuario por ID
-    usuario = 
-    
-    return usuario
-
-
-# TODO: Endpoint para actualizar un usuario
-@router.put("/{usuario_id}", response_model=UsuarioRead)
-def actualizar_usuario(
-    usuario_id: int,
-    usuario_update: UsuarioUpdate,
-    session: Session = Depends(get_session)
-):
-    """
-    Actualiza la información de un usuario existente.
-    
-    - **usuario_id**: ID del usuario a actualizar
-    - **nombre**: Nuevo nombre (opcional)
-    - **correo**: Nuevo correo (opcional)
-    """
-    # TODO: Buscar el usuario
-    db_usuario = 
-    
-    # TODO: Si se actualiza el correo, verificar que no exista
-    
-    # TODO: Actualizar solo los campos proporcionados
-    usuario_data = 
-    
-    return db_usuario
-
-
-# TODO: Endpoint para eliminar un usuario
-@router.delete("/{usuario_id}", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_usuario(
     usuario_id: int,
     session: Session = Depends(get_session)

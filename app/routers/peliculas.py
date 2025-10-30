@@ -8,7 +8,7 @@ from sqlmodel import Session, select, or_, col
 from typing import List, Optional
 
 from app.database import get_session
-from app.models import Pelicula, Favorito
+from app.models import Pelicula
 from app.schemas import PeliculaCreate, PeliculaRead, PeliculaUpdate
 
 
