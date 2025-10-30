@@ -17,7 +17,100 @@ from app.schemas import (
     PeliculaRead
 )
 
-# TODO: Crear el router con prefijo y tags
+router = APIRouter(prefix="/usuarios", tags=["usuarios"])
+
+@router.post("/", response_model=UsuarioRead, status_code=status.HTTP_201_CREATED)
+def create_usuario(usuario: UsuarioCreate, session: Session = Depends(get_session)):
+    """Crear un nuevo usuario"""
+    db_usuario = Usuario.from_orm(usuario)
+    session.add(db_usuario)
+    try:
+        session.commit()
+        session.refresh(db_usuario)
+        return db_usuario
+    except Exception as e:
+        session.rollback()
+        if "UNIQUE constraint failed: usuario.correo" in str(e):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El correo electrónico ya está registrado"
+            )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error al crear el usuario"
+        )
+
+@router.get("/", response_model=List[UsuarioRead])
+def read_usuarios(
+    skip: int = 0, 
+    limit: int = 100,
+    session: Session = Depends(get_session)
+):
+    """Obtener lista de usuarios"""
+    usuarios = session.exec(
+        select(Usuario).offset(skip).limit(limit)
+    ).all()
+    return usuarios
+
+@router.get("/{usuario_id}", response_model=UsuarioRead)
+def read_usuario(usuario_id: int, session: Session = Depends(get_session)):
+    """Obtener un usuario por su ID"""
+    usuario = session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    return usuario
+
+@router.patch("/{usuario_id}", response_model=UsuarioRead)
+def update_usuario(
+    usuario_id: int,
+    usuario: UsuarioUpdate,
+    session: Session = Depends(get_session)
+):
+    """Actualizar un usuario"""
+    db_usuario = session.get(Usuario, usuario_id)
+    if not db_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    
+    usuario_data = usuario.model_dump(exclude_unset=True)
+    for key, value in usuario_data.items():
+        setattr(db_usuario, key, value)
+    
+    try:
+        session.add(db_usuario)
+        session.commit()
+        session.refresh(db_usuario)
+        return db_usuario
+    except Exception as e:
+        session.rollback()
+        if "UNIQUE constraint failed: usuario.correo" in str(e):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El correo electrónico ya está registrado"
+            )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error al actualizar el usuario"
+        )
+
+@router.delete("/{usuario_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_usuario(usuario_id: int, session: Session = Depends(get_session)):
+    """Eliminar un usuario"""
+    usuario = session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    
+    session.delete(usuario)
+    session.commit()
+    return None
 router = APIRouter(
     prefix="/api/usuarios",
     tags=["Usuarios"]

@@ -4,8 +4,7 @@ from contextlib import asynccontextmanager
 
 from app.database import create_db_and_tables
 from app.routers import usuarios, peliculas, favoritos
-
-# TODO: Importar la configuración desde app.config
+from app.config import settings
 
 
 @asynccontextmanager
@@ -17,6 +16,39 @@ async def lifespan(app: FastAPI):
     # Startup: Crear tablas en la base de datos
     create_db_and_tables()
     yield
+    # Shutdown: No hay acciones necesarias por ahora
+    pass
+
+# Crear la aplicación FastAPI
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.app_version,
+    lifespan=lifespan
+)
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En producción, especificar los orígenes permitidos
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Incluir los routers
+app.include_router(usuarios.router)
+app.include_router(peliculas.router)
+app.include_router(favoritos.router)
+
+@app.get("/")
+async def root():
+    """Endpoint raíz que muestra información básica de la API"""
+    return {
+        "app_name": settings.app_name,
+        "version": settings.app_version,
+        "documentation": "/docs",
+        "redoc": "/redoc"
+    }
     
     # Shutdown: Limpiar recursos si es necesario
     print("cerrando aplicación...")

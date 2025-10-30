@@ -14,10 +14,78 @@ from datetime import datetime
 # ESQUEMAS DE USUARIO
 # =============================================================================
 
-# TODO: Schema para crear un usuario (request)
-class UsuarioCreate(BaseModel):
-    """
-    Schema para crear un nuevo usuario.
+class UsuarioBase(BaseModel):
+    """Schema base para usuarios"""
+    nombre: str = Field(..., min_length=2, max_length=100)
+    correo: EmailStr = Field(...)
+
+class UsuarioCreate(UsuarioBase):
+    """Schema para crear un nuevo usuario"""
+    model_config = ConfigDict(from_attributes=True)
+
+class UsuarioRead(UsuarioBase):
+    """Schema para leer un usuario"""
+    id: int
+    fecha_registro: datetime
+    model_config = ConfigDict(from_attributes=True)
+
+class UsuarioUpdate(BaseModel):
+    """Schema para actualizar un usuario"""
+    nombre: Optional[str] = Field(None, min_length=2, max_length=100)
+    correo: Optional[EmailStr] = None
+    model_config = ConfigDict(from_attributes=True)
+
+# =============================================================================
+# ESQUEMAS DE PELÍCULA
+# =============================================================================
+
+class PeliculaBase(BaseModel):
+    """Schema base para películas"""
+    titulo: str = Field(..., min_length=1, max_length=200)
+    director: str = Field(..., min_length=2, max_length=100)
+    genero: str = Field(..., min_length=2, max_length=50)
+    duracion: int = Field(..., gt=0)
+    año: int = Field(..., gt=1888)
+    clasificacion: str = Field(..., min_length=1, max_length=10)
+    sinopsis: str = Field(..., min_length=10, max_length=1000)
+
+class PeliculaCreate(PeliculaBase):
+    """Schema para crear una nueva película"""
+    model_config = ConfigDict(from_attributes=True)
+
+class PeliculaRead(PeliculaBase):
+    """Schema para leer una película"""
+    id: int
+    fecha_creacion: datetime
+    model_config = ConfigDict(from_attributes=True)
+
+class PeliculaUpdate(BaseModel):
+    """Schema para actualizar una película"""
+    titulo: Optional[str] = Field(None, min_length=1, max_length=200)
+    director: Optional[str] = Field(None, min_length=2, max_length=100)
+    genero: Optional[str] = Field(None, min_length=2, max_length=50)
+    duracion: Optional[int] = Field(None, gt=0)
+    año: Optional[int] = Field(None, gt=1888)
+    clasificacion: Optional[str] = Field(None, min_length=1, max_length=10)
+    sinopsis: Optional[str] = Field(None, min_length=10, max_length=1000)
+    model_config = ConfigDict(from_attributes=True)
+
+# =============================================================================
+# ESQUEMAS DE FAVORITO
+# =============================================================================
+
+class FavoritoCreate(BaseModel):
+    """Schema para crear un nuevo favorito"""
+    id_pelicula: int
+    model_config = ConfigDict(from_attributes=True)
+
+class FavoritoRead(BaseModel):
+    """Schema para leer un favorito"""
+    id: int
+    id_usuario: int
+    id_pelicula: int
+    fecha_marcado: datetime
+    model_config = ConfigDict(from_attributes=True)
     No incluye id ni fecha_registro (se generan automáticamente).
     """
     # nombre: str = Field(min_length=1, max_length=100, description="Nombre del usuario")

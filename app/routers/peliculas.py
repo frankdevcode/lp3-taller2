@@ -11,11 +11,95 @@ from app.database import get_session
 from app.models import Pelicula, Favorito
 from app.schemas import PeliculaCreate, PeliculaRead, PeliculaUpdate
 
-# TODO: Crear el router con prefijo y tags
 router = APIRouter(
-    prefix="/api/peliculas",
-    tags=["Películas"]
+    prefix="/peliculas",
+    tags=["películas"]
 )
+
+@router.post("/", response_model=PeliculaRead, status_code=status.HTTP_201_CREATED)
+def create_pelicula(pelicula: PeliculaCreate, session: Session = Depends(get_session)):
+    """Crear una nueva película"""
+    db_pelicula = Pelicula.from_orm(pelicula)
+    session.add(db_pelicula)
+    session.commit()
+    session.refresh(db_pelicula)
+    return db_pelicula
+
+@router.get("/", response_model=List[PeliculaRead])
+def read_peliculas(
+    skip: int = 0,
+    limit: int = 100,
+    buscar: Optional[str] = Query(None, description="Buscar en título o director"),
+    genero: Optional[str] = Query(None, description="Filtrar por género"),
+    año: Optional[int] = Query(None, description="Filtrar por año"),
+    session: Session = Depends(get_session)
+):
+    """Obtener lista de películas con filtros opcionales"""
+    query = select(Pelicula)
+    
+    if buscar:
+        query = query.where(
+            or_(
+                col(Pelicula.titulo).ilike(f"%{buscar}%"),
+                col(Pelicula.director).ilike(f"%{buscar}%")
+            )
+        )
+    if genero:
+        query = query.where(Pelicula.genero == genero)
+    if año:
+        query = query.where(Pelicula.año == año)
+    
+    query = query.offset(skip).limit(limit)
+    peliculas = session.exec(query).all()
+    return peliculas
+
+@router.get("/{pelicula_id}", response_model=PeliculaRead)
+def read_pelicula(pelicula_id: int, session: Session = Depends(get_session)):
+    """Obtener una película por su ID"""
+    pelicula = session.get(Pelicula, pelicula_id)
+    if not pelicula:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Película no encontrada"
+        )
+    return pelicula
+
+@router.patch("/{pelicula_id}", response_model=PeliculaRead)
+def update_pelicula(
+    pelicula_id: int,
+    pelicula: PeliculaUpdate,
+    session: Session = Depends(get_session)
+):
+    """Actualizar una película"""
+    db_pelicula = session.get(Pelicula, pelicula_id)
+    if not db_pelicula:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Película no encontrada"
+        )
+    
+    pelicula_data = pelicula.model_dump(exclude_unset=True)
+    for key, value in pelicula_data.items():
+        setattr(db_pelicula, key, value)
+    
+    session.add(db_pelicula)
+    session.commit()
+    session.refresh(db_pelicula)
+    return db_pelicula
+
+@router.delete("/{pelicula_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_pelicula(pelicula_id: int, session: Session = Depends(get_session)):
+    """Eliminar una película"""
+    pelicula = session.get(Pelicula, pelicula_id)
+    if not pelicula:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Película no encontrada"
+        )
+    
+    session.delete(pelicula)
+    session.commit()
+    return None
 
 
 # TODO: Endpoint para listar todas las películas

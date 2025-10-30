@@ -9,15 +9,51 @@ from typing import Optional, List
 from datetime import datetime
 
 
-# TODO: Modelo Usuario
-class Usuario(SQLModel, table=True):
+class UsuarioBase(SQLModel):
+    """Modelo base para Usuario con campos comunes"""
+    nombre: str = Field(max_length=100, index=True)
+    correo: str = Field(max_length=100, unique=True, index=True)
+    fecha_registro: datetime = Field(default_factory=datetime.utcnow)
+
+class Usuario(UsuarioBase, table=True):
     """
     Modelo de Usuario.
     Representa a los usuarios registrados en la plataforma.
     """
-    # TODO: Definir los campos del modelo
-    # id: Optional[int] = Field(default=None, primary_key=True)
-    # nombre: str = Field(max_length=100, index=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    favoritos: List["Favorito"] = Relationship(back_populates="usuario")
+
+class PeliculaBase(SQLModel):
+    """Modelo base para Película con campos comunes"""
+    titulo: str = Field(max_length=200, index=True)
+    director: str = Field(max_length=100)
+    genero: str = Field(max_length=50)
+    duracion: int = Field(gt=0)  # en minutos
+    año: int = Field(gt=1888)  # Primera película de la historia
+    clasificacion: str = Field(max_length=10)
+    sinopsis: str = Field(max_length=1000)
+    fecha_creacion: datetime = Field(default_factory=datetime.utcnow)
+
+class Pelicula(PeliculaBase, table=True):
+    """
+    Modelo de Película.
+    Almacena la información de las películas.
+    """
+    id: Optional[int] = Field(default=None, primary_key=True)
+    favoritos: List["Favorito"] = Relationship(back_populates="pelicula")
+
+class Favorito(SQLModel, table=True):
+    """
+    Modelo de Favorito.
+    Representa la relación entre usuarios y sus películas favoritas.
+    """
+    id: Optional[int] = Field(default=None, primary_key=True)
+    id_usuario: int = Field(foreign_key="usuario.id")
+    id_pelicula: int = Field(foreign_key="pelicula.id")
+    fecha_marcado: datetime = Field(default_factory=datetime.utcnow)
+    
+    usuario: Usuario = Relationship(back_populates="favoritos")
+    pelicula: Pelicula = Relationship(back_populates="favoritos")
     # correo: str = Field(unique=True, max_length=150, index=True)
     # fecha_registro: datetime = Field(default_factory=datetime.now)
     

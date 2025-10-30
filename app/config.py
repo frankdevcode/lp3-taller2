@@ -13,11 +13,19 @@ class Settings(BaseSettings):
     Lee las variables de entorno desde el archivo .env
     """
     
-    # TODO: Configuración básica de la aplicación
+    # Configuración básica de la aplicación
     app_name: str = "API de Películas"
     app_version: str = "1.0.0"
     
-    # TODO: Configuración del entorno
+    # Configuración del entorno
+    environment: Literal["development", "testing", "production"] = "development"
+    debug: bool = True
+    
+    # Configuración de la base de datos
+    database_url: str = "sqlite:///peliculas.db"
+    
+    class Config:
+        env_file = ".env"
     # environment: Literal["development", "testing", "production"] = "development"
     environment: str = "development"
     

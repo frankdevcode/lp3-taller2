@@ -15,9 +15,99 @@ from app.schemas import (
     FavoritoWithDetails
 )
 
-# TODO: Crear el router con prefijo y tags
 router = APIRouter(
-    prefix="/api/favoritos",
+    prefix="/usuarios/{usuario_id}/favoritos",
+    tags=["favoritos"]
+)
+
+@router.post("/", response_model=FavoritoRead, status_code=status.HTTP_201_CREATED)
+def create_favorito(
+    usuario_id: int,
+    favorito: FavoritoCreate,
+    session: Session = Depends(get_session)
+):
+    """Marcar una película como favorita para un usuario"""
+    # Verificar que el usuario existe
+    usuario = session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    
+    # Verificar que la película existe
+    pelicula = session.get(Pelicula, favorito.id_pelicula)
+    if not pelicula:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Película no encontrada"
+        )
+    
+    # Verificar si ya está marcada como favorita
+    statement = select(Favorito).where(
+        Favorito.id_usuario == usuario_id,
+        Favorito.id_pelicula == favorito.id_pelicula
+    )
+    existing_favorito = session.exec(statement).first()
+    if existing_favorito:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Esta película ya está en favoritos"
+        )
+    
+    # Crear el favorito
+    db_favorito = Favorito(
+        id_usuario=usuario_id,
+        id_pelicula=favorito.id_pelicula
+    )
+    session.add(db_favorito)
+    session.commit()
+    session.refresh(db_favorito)
+    return db_favorito
+
+@router.get("/", response_model=List[FavoritoRead])
+def read_favoritos(
+    usuario_id: int,
+    skip: int = 0,
+    limit: int = 100,
+    session: Session = Depends(get_session)
+):
+    """Obtener lista de favoritos de un usuario"""
+    # Verificar que el usuario existe
+    usuario = session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario no encontrado"
+        )
+    
+    statement = select(Favorito).where(
+        Favorito.id_usuario == usuario_id
+    ).offset(skip).limit(limit)
+    favoritos = session.exec(statement).all()
+    return favoritos
+
+@router.delete("/{pelicula_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_favorito(
+    usuario_id: int,
+    pelicula_id: int,
+    session: Session = Depends(get_session)
+):
+    """Eliminar una película de favoritos"""
+    statement = select(Favorito).where(
+        Favorito.id_usuario == usuario_id,
+        Favorito.id_pelicula == pelicula_id
+    )
+    favorito = session.exec(statement).first()
+    if not favorito:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Película no encontrada en favoritos"
+        )
+    
+    session.delete(favorito)
+    session.commit()
+    return None
     tags=["Favoritos"]
 )
 
