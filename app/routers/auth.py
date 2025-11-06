@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from datetime import timedelta
 from pydantic import BaseModel
@@ -36,12 +37,13 @@ def register(data: LoginData, session: Session = Depends(get_session)):
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(data: LoginData, session: Session = Depends(get_session)):
-    statement = select(Usuario).where(Usuario.correo == data.correo)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+    """Login usando form-data (OAuth2 password). El campo `username` debe contener el correo."""
+    correo = form_data.username
+    password = form_data.password
+    statement = select(Usuario).where(Usuario.correo == correo)
     usuario = session.exec(statement).first()
-    if not usuario:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
-    if not verify_password(data.password, usuario.password_hash or ""):
+    if not usuario or not verify_password(password, usuario.password_hash or ""):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
 
     access_token_expires = timedelta(minutes=60)

@@ -17,8 +17,8 @@ def test_register_and_login_and_access_protected():
         data = r.json()
         assert data["correo"] == correo
 
-        # Login
-        r = client.post("/api/auth/login", json={"correo": correo, "password": password})
+        # Login (using OAuth2 form data: username=<correo>)
+        r = client.post("/api/auth/login", data={"username": correo, "password": password})
         assert r.status_code == 200
         token_data = r.json()
         assert "access_token" in token_data

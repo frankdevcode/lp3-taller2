@@ -14,8 +14,8 @@ def test_login_invalid_and_protected_access():
         r = client.post("/api/auth/register", json={"correo": correo, "password": password})
         assert r.status_code == 201
 
-        # Login with wrong password
-        r = client.post("/api/auth/login", json={"correo": correo, "password": "wrongpass"})
+        # Login with wrong password (form data)
+        r = client.post("/api/auth/login", data={"username": correo, "password": "wrongpass"})
         assert r.status_code == 401
 
         # Access protected endpoint without token

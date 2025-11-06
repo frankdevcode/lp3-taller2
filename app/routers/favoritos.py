@@ -26,6 +26,10 @@ def create_favorito(favorito: FavoritoCreate, session: Session = Depends(get_ses
     if not pelicula:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Película no encontrada")
 
+    # Solo el usuario dueño puede crear favoritos para su cuenta
+    if current_user.id != favorito.id_usuario:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado para crear favoritos para este usuario")
+
     statement = select(Favorito).where(
         Favorito.id_usuario == favorito.id_usuario,
         Favorito.id_pelicula == favorito.id_pelicula
@@ -53,6 +57,9 @@ def eliminar_favorito(favorito_id: int, session: Session = Depends(get_session),
     favorito = session.get(Favorito, favorito_id)
     if not favorito:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Favorito no encontrado")
+    # Solo propietario puede eliminar su favorito
+    if favorito.id_usuario != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado para eliminar este favorito")
     session.delete(favorito)
     session.commit()
     return None
@@ -66,6 +73,10 @@ def marcar_favorito_usuario(usuario_id: int, pelicula_id: int, session: Session 
     pelicula = session.get(Pelicula, pelicula_id)
     if not pelicula:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Película no encontrada")
+
+    # Solo el usuario autenticado puede marcar favoritos para su propia cuenta
+    if current_user.id != usuario_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado para marcar favorito para este usuario")
 
     statement = select(Favorito).where(Favorito.id_usuario == usuario_id, Favorito.id_pelicula == pelicula_id)
     existing = session.exec(statement).first()
