@@ -1,5 +1,7 @@
 # API de Películas
 
+![CI](https://github.com/frankdevcode/lp3-taller2/actions/workflows/ci.yml/badge.svg)
+
 Una [API RESTful](https://aws.amazon.com/es/what-is/restful-api/) para gestionar usuarios, películas y favoritos. Desarrollada con [FastAPI](https://fastapi.tiangolo.com/), [SQLModel](https://sqlmodel.tiangolo.com/) y [Pydantic](https://docs.pydantic.dev/).
 
 ## Descripción
@@ -107,7 +109,21 @@ lp3-taller2
    .venv/bin/python scripts/init_db.py --db peliculas.db --sql init_db.sql
    ```
 
+   Alternativamente, si tienes `make` disponible (WSL o una utilidad make), puedes usar el Makefile:
+
+   ```powershell
+   make init-db
+   ```
+
 2. Ejecuta la aplicación (después de activar el entorno):
+
+   Puedes usar el Makefile para atajos en desarrollo (requiere `make`):
+
+   ```powershell
+   make run
+   ```
+
+   O ejecuta uvicorn directamente:
 
    ```powershell
    # PowerShell
@@ -129,6 +145,19 @@ lp3-taller2
    La configuración de `docker-compose.yml` monta la carpeta del proyecto dentro del contenedor
    y también monta `peliculas.db` en la raíz del proyecto para persistir la base de datos SQLite.
 
+2. Accede a la aplicación:
+    - API: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+    - Documentación *Swagger UI*: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+    - Documentación *ReDoc*: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
+Makefile: objetivos útiles añadidos al repositorio (`Makefile`). Ejemplos:
+
+```powershell
+make init-db   # inicializar DB
+make run       # ejecutar uvicorn
+make test      # ejecutar tests
+make lint      # ejecutar ruff
+```
 
 2. Accede a la aplicación:
    - API: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
