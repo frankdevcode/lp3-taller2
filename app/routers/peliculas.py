@@ -10,11 +10,17 @@ from typing import List, Optional
 from app.database import get_session
 from app.models import Pelicula
 from app.schemas import PeliculaCreate, PeliculaRead, PeliculaUpdate
+from app.security import get_current_user
+from fastapi import Depends
 router = APIRouter(prefix="/peliculas", tags=["peliculas"])
 
 
 @router.post("/", response_model=PeliculaRead, status_code=status.HTTP_201_CREATED)
-def create_pelicula(pelicula: PeliculaCreate, session: Session = Depends(get_session)):
+def create_pelicula(
+    pelicula: PeliculaCreate,
+    session: Session = Depends(get_session),
+    current_user=Depends(get_current_user),
+):
     # Evitar duplicados por título y año
     statement = select(Pelicula).where(
         Pelicula.titulo == pelicula.titulo,
@@ -64,7 +70,12 @@ def read_pelicula(pelicula_id: int, session: Session = Depends(get_session)):
 
 
 @router.patch("/{pelicula_id}", response_model=PeliculaRead)
-def update_pelicula(pelicula_id: int, pelicula: PeliculaUpdate, session: Session = Depends(get_session)):
+def update_pelicula(
+    pelicula_id: int,
+    pelicula: PeliculaUpdate,
+    session: Session = Depends(get_session),
+    current_user=Depends(get_current_user),
+):
     db_pelicula = session.get(Pelicula, pelicula_id)
     if not db_pelicula:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Película no encontrada")
@@ -78,7 +89,11 @@ def update_pelicula(pelicula_id: int, pelicula: PeliculaUpdate, session: Session
 
 
 @router.delete("/{pelicula_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_pelicula(pelicula_id: int, session: Session = Depends(get_session)):
+def delete_pelicula(
+    pelicula_id: int,
+    session: Session = Depends(get_session),
+    current_user=Depends(get_current_user),
+):
     pelicula = session.get(Pelicula, pelicula_id)
     if not pelicula:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Película no encontrada")

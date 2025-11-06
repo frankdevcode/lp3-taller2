@@ -22,6 +22,8 @@ class Usuario(UsuarioBase, table=True):
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     favoritos: List["Favorito"] = Relationship(back_populates="usuario")
+    # Password hash (no almacenar contraseñas en texto plano)
+    password_hash: Optional[str] = Field(default=None, max_length=255)
 
 class PeliculaBase(SQLModel):
     """Modelo base para Película con campos comunes"""
@@ -49,6 +51,11 @@ class Favorito(SQLModel, table=True):
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     id_usuario: int = Field(foreign_key="usuario.id")
+    id_pelicula: int = Field(foreign_key="pelicula.id")
+    fecha_marcado: datetime = Field(default_factory=datetime.utcnow)
+
+    usuario: Optional[Usuario] = Relationship(back_populates="favoritos")
+    pelicula: Optional[Pelicula] = Relationship(back_populates="favoritos")
 
 
     # Nota: Las clases Usuario, Pelicula y Favorito están definidas arriba.

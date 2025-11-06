@@ -10,12 +10,14 @@ from typing import List
 from app.database import get_session
 from app.models import Favorito, Usuario, Pelicula
 from app.schemas import FavoritoCreate, FavoritoRead
+from app.security import get_current_user
+from fastapi import Depends
 
 router = APIRouter(tags=["favoritos"])
 
 
 @router.post("/favoritos/", response_model=FavoritoRead, status_code=status.HTTP_201_CREATED)
-def create_favorito(favorito: FavoritoCreate, session: Session = Depends(get_session)):
+def create_favorito(favorito: FavoritoCreate, session: Session = Depends(get_session), current_user=Depends(get_current_user)):
     # Verificar existencia de usuario y película
     usuario = session.get(Usuario, favorito.id_usuario)
     if not usuario:
@@ -47,7 +49,7 @@ def listar_favoritos(skip: int = 0, limit: int = 100, session: Session = Depends
 
 
 @router.delete("/favoritos/{favorito_id}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_favorito(favorito_id: int, session: Session = Depends(get_session)):
+def eliminar_favorito(favorito_id: int, session: Session = Depends(get_session), current_user=Depends(get_current_user)):
     favorito = session.get(Favorito, favorito_id)
     if not favorito:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Favorito no encontrado")
@@ -57,7 +59,7 @@ def eliminar_favorito(favorito_id: int, session: Session = Depends(get_session))
 
 
 @router.post("/usuarios/{usuario_id}/favoritos/{pelicula_id}", status_code=status.HTTP_201_CREATED)
-def marcar_favorito_usuario(usuario_id: int, pelicula_id: int, session: Session = Depends(get_session)):
+def marcar_favorito_usuario(usuario_id: int, pelicula_id: int, session: Session = Depends(get_session), current_user=Depends(get_current_user)):
     usuario = session.get(Usuario, usuario_id)
     if not usuario:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")

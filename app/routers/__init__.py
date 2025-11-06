@@ -6,6 +6,7 @@ Importa y expone los routers para que `main.py` pueda incluirlos.
 from .usuarios import router as usuarios
 from .peliculas import router as peliculas
 from .favoritos import router as favoritos
+from .auth import router as auth
 
-__all__ = ["usuarios", "peliculas", "favoritos"]
+__all__ = ["usuarios", "peliculas", "favoritos", "auth"]
 

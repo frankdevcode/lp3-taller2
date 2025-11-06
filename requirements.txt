@@ -18,3 +18,5 @@ pytest-asyncio
 httpx
 email-validator
 ruff
+passlib[bcrypt]
+python-jose[cryptography]

@@ -21,6 +21,7 @@ class UsuarioBase(BaseModel):
 
 
 class UsuarioCreate(UsuarioBase):
+    password: str = Field(..., min_length=6, max_length=128)
     model_config = ConfigDict(from_attributes=True)
 
 

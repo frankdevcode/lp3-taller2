@@ -15,13 +15,16 @@ from app.schemas import (
     UsuarioUpdate,
     PeliculaRead,
 )
+from app.security import get_current_user, get_password_hash
+from fastapi import Depends
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
 @router.post("/", response_model=UsuarioRead, status_code=status.HTTP_201_CREATED)
 def create_usuario(usuario: UsuarioCreate, session: Session = Depends(get_session)):
-    """Crear un nuevo usuario"""
-    db_usuario = Usuario.from_orm(usuario)
+    """Crear un nuevo usuario (registro). La contraseña se almacena hasheada."""
+    password_hash = get_password_hash(usuario.password)
+    db_usuario = Usuario(nombre=usuario.nombre, correo=usuario.correo, password_hash=password_hash)
     session.add(db_usuario)
     try:
         session.commit()

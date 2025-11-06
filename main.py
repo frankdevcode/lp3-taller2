@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from app.database import create_db_and_tables
-from app.routers import usuarios, peliculas, favoritos
+from app.routers import usuarios, peliculas, favoritos, auth
 from app.config import settings
 
 
@@ -38,6 +38,7 @@ app.add_middleware(
 app.include_router(usuarios, prefix="/api")
 app.include_router(peliculas, prefix="/api")
 app.include_router(favoritos, prefix="/api")
+app.include_router(auth, prefix="/api")
 
 
 @app.get("/", tags=["Root"])
