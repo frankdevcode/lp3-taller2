@@ -26,7 +26,7 @@ def test_register_and_login_and_access_protected():
 
         # Use token to create a pelicula (protected endpoint)
         pelicula_payload = {
-            "titulo": "Pelicula Auth Test",
+            "titulo": f"Pelicula Auth Test {unique}",
             "director": "Director",
             "genero": "Drama",
             "duracion": 100,
