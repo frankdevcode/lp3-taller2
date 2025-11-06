@@ -138,23 +138,27 @@ def eliminar_usuario(
     return None
 
 
-# TODO: Endpoint para obtener los favoritos de un usuario
+from app.models import Pelicula, Favorito
+from app.schemas import PeliculaRead
+
+
 @router.get("/{usuario_id}/favoritos", response_model=List[PeliculaRead])
 def listar_favoritos_usuario(
     usuario_id: int,
     session: Session = Depends(get_session)
 ):
-    """
-    Lista todas las películas favoritas de un usuario.
-    
-    - **usuario_id**: ID del usuario
-    """
-    # TODO: Verificar que el usuario existe
-    usuario = 
-    
-    # TODO: Obtener las películas favoritas del usuario
-    statement = 
-    
+    """Listar películas favoritas de un usuario"""
+    usuario = session.get(Usuario, usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+    statement = select(Favorito).where(Favorito.id_usuario == usuario_id)
+    favoritos = session.exec(statement).all()
+    peliculas = []
+    for f in favoritos:
+        p = session.get(Pelicula, f.id_pelicula)
+        if p:
+            peliculas.append(p)
     return peliculas
 
 
@@ -201,11 +205,11 @@ def marcar_favorito(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="La película ya está marcada como favorita"
         )
-    
-    # TODO: Crear el favorito
-    favorito = 
-    
-    return {"message": "Película marcada como favorita exitosamente"}
+    favorito = Favorito(id_usuario=usuario_id, id_pelicula=pelicula_id)
+    session.add(favorito)
+    session.commit()
+    session.refresh(favorito)
+    return {"message": "Película marcada como favorita exitosamente", "favorito_id": favorito.id}
 
 
 # TODO: Endpoint para eliminar una película de favoritos
@@ -224,10 +228,11 @@ def eliminar_favorito(
     - **usuario_id**: ID del usuario
     - **pelicula_id**: ID de la película
     """
-    # TODO: Buscar el favorito
-    statement = 
-
-    favorito = 
+    statement = select(Favorito).where(
+        Favorito.id_usuario == usuario_id,
+        Favorito.id_pelicula == pelicula_id
+    )
+    favorito = session.exec(statement).first()
     
     if not favorito:
         raise HTTPException(
@@ -235,8 +240,8 @@ def eliminar_favorito(
             detail="El favorito no existe"
         )
     
-    # TODO: Eliminar el favorito
-    
+    session.delete(favorito)
+    session.commit()
     return None
 
 
