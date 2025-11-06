@@ -114,6 +114,22 @@ lp3-taller2
    .venv\Scripts\python.exe -m uvicorn main:app --reload
    ```
 
+   ### Ejecutar con Docker (opcional)
+
+   Si prefieres usar Docker, construye la imagen y levanta el servicio con docker-compose:
+
+   ```powershell
+   # Construir la imagen
+   docker build -t lp3-taller2:latest .
+
+   # O con docker-compose (levanta en http://0.0.0.0:8000)
+   docker-compose up --build
+   ```
+
+   La configuración de `docker-compose.yml` monta la carpeta del proyecto dentro del contenedor
+   y también monta `peliculas.db` en la raíz del proyecto para persistir la base de datos SQLite.
+
+
 2. Accede a la aplicación:
    - API: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
    - Documentación *Swagger UI*: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
