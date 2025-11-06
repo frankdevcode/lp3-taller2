@@ -35,9 +35,9 @@ app.add_middleware(
 )
 
 # Incluir routers bajo prefijo /api
-app.include_router(usuarios.router, prefix="/api")
-app.include_router(peliculas.router, prefix="/api")
-app.include_router(favoritos.router, prefix="/api")
+app.include_router(usuarios, prefix="/api")
+app.include_router(peliculas, prefix="/api")
+app.include_router(favoritos, prefix="/api")
 
 
 @app.get("/", tags=["Root"])

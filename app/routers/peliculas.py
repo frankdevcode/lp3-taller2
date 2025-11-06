@@ -9,6 +9,7 @@ from typing import List, Optional
 
 from app.database import get_session
 from app.models import Pelicula
+from app.schemas import PeliculaCreate, PeliculaRead, PeliculaUpdate
 router = APIRouter(prefix="/peliculas", tags=["peliculas"])
 
 
