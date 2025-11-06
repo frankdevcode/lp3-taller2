@@ -73,10 +73,19 @@ lp3-taller2
 
 2. Crea y activa un entorno virtual:
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
+    - Linux / macOS:
+
+       ```bash
+       python -m venv .venv
+       source .venv/bin/activate
+       ```
+
+    - Windows (PowerShell):
+
+       ```powershell
+       python -m venv .venv
+       .\.venv\Scripts\Activate.ps1
+       ```
 
 3. Instala las dependencias:
 
@@ -88,10 +97,21 @@ lp3-taller2
 
 ## Ejecución
 
-1. Ejecuta la aplicación:
+1. Inicializar la base de datos (opcional — crea `peliculas.db`):
 
-   ```bash
-   uvicorn main:app --reload
+   ```powershell
+   # Desde PowerShell (Windows)
+   .venv\Scripts\python.exe scripts\init_db.py --db peliculas.db --sql init_db.sql
+   
+   # O desde Linux/macOS
+   .venv/bin/python scripts/init_db.py --db peliculas.db --sql init_db.sql
+   ```
+
+2. Ejecuta la aplicación (después de activar el entorno):
+
+   ```powershell
+   # PowerShell
+   .venv\Scripts\python.exe -m uvicorn main:app --reload
    ```
 
 2. Accede a la aplicación:
@@ -100,6 +120,12 @@ lp3-taller2
    - Documentación *ReDoc*: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ## Uso de la API
+
+Todos los endpoints están bajo el prefijo `/api`.
+Ejemplos:
+- Listar usuarios: `GET /api/usuarios/`
+- Crear película: `POST /api/peliculas/`
+- Marcar favorito (usuario): `POST /api/usuarios/{usuario_id}/favoritos/{pelicula_id}`
 
 ### Usuarios
 
@@ -142,7 +168,13 @@ lp3-taller2
 
 1. Ajustar este `README.md` con los datos del Estudiante
 
-2. Utilizando [DBeaver](https://dbeaver.io/), y el _script_ `init_db.sql` adiciona datos directo a las tablas.
+2. Inicializa la base de datos con el script provisto (recomendado para entorno local):
+
+   ```powershell
+   .venv\Scripts\python.exe scripts\init_db.py --db peliculas.db --sql init_db.sql
+   ```
+
+   También puedes usar DBeaver para ejecutar `init_db.sql` si prefieres una UI.
 
 3. Busca todos los comentarios `# TODO`, realiza los ajustes necesarios, y ejecuta un `commit` por cada uno.
 
