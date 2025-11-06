@@ -8,63 +8,27 @@ from typing import Literal
 
 
 class Settings(BaseSettings):
-    """
-    Configuración de la aplicación usando Pydantic Settings.
-    Lee las variables de entorno desde el archivo .env
-    """
-    
-    # Configuración básica de la aplicación
+    """Configuración de la aplicación usando Pydantic Settings."""
+
     app_name: str = "API de Películas"
     app_version: str = "1.0.0"
-    
-    # Configuración del entorno
     environment: Literal["development", "testing", "production"] = "development"
     debug: bool = True
-    
-    # Configuración de la base de datos
-    database_url: str = "sqlite:///peliculas.db"
-    
-    class Config:
-        env_file = ".env"
-    # environment: Literal["development", "testing", "production"] = "development"
-    environment: str = "development"
-    
-    # TODO: Configuración de la base de datos
-    # Para SQLite: sqlite:///./peliculas.db
-    # Para PostgreSQL: postgresql://user:password@localhost/dbname
+
+    # Base de datos por defecto (SQLite local)
     database_url: str = "sqlite:///./peliculas.db"
-    
-    # TODO: Configuración del servidor
+
+    # Configuración del servidor
     host: str = "0.0.0.0"
     port: int = 8000
-    debug: bool = True
-    
-    # TODO: Configuración de CORS
-    # En desarrollo puedes usar ["*"], en producción especifica los orígenes permitidos
+
+    # CORS
     cors_origins: list[str] = ["*"]
-    
-    # TODO: Configuración de seguridad (para futuras mejoras)
-    # secret_key: str = "your-secret-key-here"  # Cambiar en producción
-    # algorithm: str = "HS256"
-    # access_token_expire_minutes: int = 30
-    
-    # TODO: Configuración de logging
-    # log_level: str = "INFO"
-    
+
     class Config:
-        """
-        Configuración de Pydantic Settings.
-        """
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
-        
-        # TODO: Opcional - Agregar validación personalizada
-        # @validator("database_url")
-        # def validate_database_url(cls, v):
-        #     if not v:
-        #         raise ValueError("DATABASE_URL no puede estar vacío")
-        #     return v
 
 
 # TODO: Crear una instancia global de Settings

@@ -8,11 +8,12 @@ from sqlmodel import Session, select
 from typing import List
 
 from app.database import get_session
-from app.models import Usuario
+from app.models import Usuario, Pelicula, Favorito
 from app.schemas import (
     UsuarioCreate,
     UsuarioRead,
-    UsuarioUpdate
+    UsuarioUpdate,
+    PeliculaRead,
 )
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
@@ -136,10 +137,6 @@ def eliminar_usuario(
     session.delete(usuario)
     session.commit()
     return None
-
-
-from app.models import Pelicula, Favorito
-from app.schemas import PeliculaRead
 
 
 @router.get("/{usuario_id}/favoritos", response_model=List[PeliculaRead])

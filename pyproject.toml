@@ -1,0 +1,6 @@
+[tool.ruff]
+line-length = 88
+exclude = [".git", "__pycache__", "build", "dist", ".venv", "venv"]
+
+[tool.ruff.lint]
+ignore = ["E203"]

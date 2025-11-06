@@ -6,7 +6,7 @@ Estos esquemas se usan en los endpoints de la API para:
 """
 
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime
 from pydantic import ConfigDict
 
