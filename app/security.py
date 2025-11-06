@@ -12,17 +12,23 @@ from app.database import get_session
 from app.models import Usuario
 from sqlmodel import select
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Use pbkdf2_sha256 to avoid platform-specific bcrypt backend initialization issues
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 settings = get_settings()
 
 
 def get_password_hash(password: str) -> str:
+    # bcrypt has a 72-byte input limit; truncate to avoid backend errors
+    if isinstance(password, str):
+        password = password[:72]
     return pwd_context.hash(password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    if isinstance(plain_password, str):
+        plain_password = plain_password[:72]
     return pwd_context.verify(plain_password, hashed_password)
 
 

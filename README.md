@@ -172,6 +172,21 @@ Ejemplos:
 - Crear película: `POST /api/peliculas/`
 - Marcar favorito (usuario): `POST /api/usuarios/{usuario_id}/favoritos/{pelicula_id}`
 
+### Autenticación (JWT)
+
+Se añadió soporte de autenticación JWT. Endpoints:
+
+- POST `/api/auth/register` — Registrar usuario. Body JSON: `{ "correo": "user@example.com", "password": "secret" }`
+- POST `/api/auth/login` — Iniciar sesión. Body JSON: `{ "correo": "user@example.com", "password": "secret" }`. Devuelve `{ "access_token": "...", "token_type": "bearer" }`.
+
+Usa el token en los endpoints protegidos añadiendo el header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+Los endpoints mutativos (crear/editar/eliminar películas y crear/eliminar favoritos) requieren autenticación.
+
 ### Usuarios
 
 - GET `/` - Listar usuarios con paginación
