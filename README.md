@@ -268,3 +268,41 @@ Los endpoints mutativos (crear/editar/eliminar películas y crear/eliminar favor
 
 12. **Listas personalizadas**: Permitir a los usuarios crear listas temáticas personalizadas más allá de favoritos (por ejemplo: "Pendientes por ver", "Clásicos", "Para ver en familia").
 
+## Entrega al profesor
+
+Pasos recomendados para entregar el backend listo para revisión:
+
+1. Clonar el repositorio y entrar en la carpeta del proyecto.
+
+2. Preparar entorno (Windows - PowerShell):
+
+```powershell
+# Ejecutar el script de setup (crea .venv, instala dependencias, inicializa DB y corre tests)
+.\n+\scripts\setup_dev.ps1
+```
+
+3. Ejecutar manualmente si prefieres pasos individuales:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m scripts.init_db --db peliculas.db --sql init_db.sql
+pytest -q
+```
+
+4. Ejecutar la API en desarrollo:
+
+```powershell
+.venv\Scripts\python.exe -m uvicorn main:app --reload
+```
+
+5. Probar la API en Swagger UI: http://127.0.0.1:8000/docs
+
+Checklist para entregar:
+- [ ] Tests pasan (ver `pytest -q`) — en CI se ejecutarán automáticamente.
+- [ ] `README.md` actualizado con instrucciones.
+- [ ] `.env.example` incluido con variables necesarias (no subir secretos reales).
+
+Si quieres, puedo crear un archivo ZIP con el proyecto o preparar un branch de entregable; dime cuál prefieres.
+
