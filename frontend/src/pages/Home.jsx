@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 export default function Home({ api, user }) {
-  const [stats, setStats] = useState({ usuarios: 0, peliculas: 0, favoritos: 0, peliMasPopular: null })
+  const [stats, setStats] = useState({ total_usuarios: 0, total_peliculas: 0, total_favoritos: 0, pelicula_mas_popular: null })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -11,13 +11,8 @@ export default function Home({ api, user }) {
 
   const loadStats = async () => {
     try {
-      const usuarios = await api.fetchUsuarios({ limit: 1 })
-      const peliculas = await api.fetchPeliculas({ limit: 1 })
-      setStats({
-        usuarios: usuarios.length > 0 ? usuarios[0] : { nombre: 'N/A' },
-        peliculas: peliculas.length > 0 ? peliculas[0] : { titulo: 'N/A' },
-        favoritos: 0,
-      })
+      const data = await api.getResumenEstadisticas()
+      setStats(data)
     } catch (err) {
       toast.error('Error al cargar estadísticas')
     } finally {
@@ -37,19 +32,26 @@ export default function Home({ api, user }) {
       <section className="stats-grid">
         <div className="stat-card">
           <h3>Películas</h3>
-          <p className="stat-value">0</p>
+          <p className="stat-value">{stats.total_peliculas}</p>
           <small>Total en catálogo</small>
         </div>
         <div className="stat-card">
           <h3>Usuarios</h3>
-          <p className="stat-value">0</p>
+          <p className="stat-value">{stats.total_usuarios}</p>
           <small>Registrados</small>
         </div>
         <div className="stat-card">
           <h3>Favoritos</h3>
-          <p className="stat-value">0</p>
+          <p className="stat-value">{stats.total_favoritos}</p>
           <small>Marcados</small>
         </div>
+        {stats.pelicula_mas_popular && (
+          <div className="stat-card">
+            <h3>🏆 Más Popular</h3>
+            <p className="stat-value-text">{stats.pelicula_mas_popular.titulo}</p>
+            <small>{stats.pelicula_mas_popular.favoritos} ⭐</small>
+          </div>
+        )}
       </section>
 
       <section className="featured-section">

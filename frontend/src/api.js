@@ -109,6 +109,52 @@ const eliminarFavorito = async (favorito_id) => {
   return resp.data
 }
 
+// ESTADÍSTICAS
+const getResumenEstadisticas = async () => {
+  const resp = await instance.get('/estadisticas/resumen')
+  return resp.data
+}
+
+const getPeliculasPorGenero = async () => {
+  const resp = await instance.get('/estadisticas/peliculas/por-genero')
+  return resp.data
+}
+
+const getPeliculasPorClasificacion = async () => {
+  const resp = await instance.get('/estadisticas/peliculas/por-clasificacion')
+  return resp.data
+}
+
+const getTopPeliculasPopulares = async (limit = 10) => {
+  const resp = await instance.get('/estadisticas/peliculas/top-populares', { params: { limit } })
+  return resp.data
+}
+
+const getPeliculasRecientes = async (limit = 10) => {
+  const resp = await instance.get('/estadisticas/peliculas/recientes', { params: { limit } })
+  return resp.data
+}
+
+const getUsuariosMasActivos = async (limit = 10) => {
+  const resp = await instance.get('/estadisticas/usuarios/mas-activos', { params: { limit } })
+  return resp.data
+}
+
+const getGeneros = async () => {
+  const resp = await instance.get('/estadisticas/generos')
+  return resp.data
+}
+
+const getClasificaciones = async () => {
+  const resp = await instance.get('/estadisticas/clasificaciones')
+  return resp.data
+}
+
+const getDirectores = async () => {
+  const resp = await instance.get('/estadisticas/directors')
+  return resp.data
+}
+
 export default {
   instance,
   setAuthToken,
@@ -129,4 +175,13 @@ export default {
   marcarFavorito,
   favoritosPorUsuario,
   eliminarFavorito,
+  getResumenEstadisticas,
+  getPeliculasPorGenero,
+  getPeliculasPorClasificacion,
+  getTopPeliculasPopulares,
+  getPeliculasRecientes,
+  getUsuariosMasActivos,
+  getGeneros,
+  getClasificaciones,
+  getDirectores,
 }
