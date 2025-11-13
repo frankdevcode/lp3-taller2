@@ -99,6 +99,8 @@ lp3-taller2
 
 ## Ejecución
 
+### Backend (FastAPI)
+
 1. Inicializar la base de datos (opcional — crea `peliculas.db`):
 
    ```powershell
@@ -109,11 +111,7 @@ lp3-taller2
    .venv/bin/python scripts/init_db.py --db peliculas.db --sql init_db.sql
    ```
 
-   Alternativamente, si tienes `make` disponible (WSL o una utilidad make), puedes usar el Makefile:
-
-   ```powershell
-   make init-db
-   ```
+   También puedes usar DBeaver para ejecutar `init_db.sql` si prefieres una UI.
 
 2. Ejecuta la aplicación (después de activar el entorno):
 
@@ -145,24 +143,58 @@ lp3-taller2
    La configuración de `docker-compose.yml` monta la carpeta del proyecto dentro del contenedor
    y también monta `peliculas.db` en la raíz del proyecto para persistir la base de datos SQLite.
 
-2. Accede a la aplicación:
+3. Accede a la API backend:
     - API: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
     - Documentación *Swagger UI*: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
     - Documentación *ReDoc*: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
-Makefile: objetivos útiles añadidos al repositorio (`Makefile`). Ejemplos:
+### Frontend (React + Vite)
 
-```powershell
-make init-db   # inicializar DB
-make run       # ejecutar uvicorn
-make test      # ejecutar tests
-make lint      # ejecutar ruff
+1. Abre una nueva terminal en la carpeta `frontend`:
+
+   ```bash
+   cd frontend
+   ```
+
+2. Instala las dependencias:
+
+   ```bash
+   npm install
+   ```
+
+3. Ejecuta el servidor de desarrollo:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Accede al frontend en el navegador:
+   - Frontend: [http://localhost:5173/](http://localhost:5173/)
+
+> **Nota importante**: El backend debe estar ejecutándose en `http://localhost:8000` para que el frontend pueda conectarse. Si quieres cambiar la URL del backend, edita el archivo `frontend/.env` y actualiza `VITE_API_BASE`.
+
+### Ejecución Completa (Backend + Frontend)
+
+Para ejecutar la aplicación completa, necesitas dos terminales:
+
+**Terminal 1 (Backend)**:
+```bash
+# Activar entorno virtual
+.venv\Scripts\Activate.ps1  # Windows
+# source .venv/bin/activate  # Linux/macOS
+
+# Ejecutar backend
+python -m uvicorn main:app --reload
 ```
 
-2. Accede a la aplicación:
-   - API: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-   - Documentación *Swagger UI*: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-   - Documentación *ReDoc*: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+**Terminal 2 (Frontend)**:
+```bash
+cd frontend
+npm install  # Solo la primera vez
+npm run dev
+```
+
+Luego accede a http://localhost:5173 en tu navegador.
 
 ## Uso de la API
 
