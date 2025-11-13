@@ -6,7 +6,8 @@ from pydantic import BaseModel
 
 from app.database import get_session
 from app.models import Usuario
-from app.security import get_password_hash, verify_password, create_access_token
+from app.security import get_password_hash, verify_password, create_access_token, get_current_user
+from app.schemas import UsuarioRead
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -49,3 +50,9 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = D
     access_token_expires = timedelta(minutes=60)
     access_token = create_access_token(data={"sub": usuario.correo}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/me", response_model=UsuarioRead)
+def get_current_user_info(current_user: Usuario = Depends(get_current_user)):
+    """Obtener información del usuario autenticado."""
+    return current_user
