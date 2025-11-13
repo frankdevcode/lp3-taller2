@@ -9,7 +9,7 @@ import Register from './pages/Register'
 import Home from './pages/Home'
 import Usuarios from './pages/Usuarios'
 import Peliculas from './pages/Peliculas'
-import Favoritos from './pages/Favoritos'
+import Favoritos from './pages/Favorites'
 import Stats from './pages/Stats'
 import './styles.css'
 
