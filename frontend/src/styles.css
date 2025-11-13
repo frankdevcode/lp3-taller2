@@ -740,3 +740,110 @@ table tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* PUBLIC LAYOUT AND AUTH BUTTONS */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3), transparent);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 24px;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.logo:hover {
+  text-decoration: none;
+}
+
+.nav-public {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-login,
+.btn-register {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-login {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--accent);
+}
+
+.btn-login:hover {
+  background: var(--accent);
+  color: var(--bg);
+  text-decoration: none;
+}
+
+.btn-register {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.btn-register:hover {
+  background: #ff0a1f;
+  text-decoration: none;
+}
+
+.btn-logout {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+  background: #ff0a1f;
+}
+
+.user-email {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

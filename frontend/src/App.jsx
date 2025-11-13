@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import api from './api'
 import Layout from './components/Layout'
+import PublicLayout from './components/PublicLayout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
@@ -60,31 +61,29 @@ export default function App() {
     return <div className="loading">Cargando...</div>
   }
 
-  if (!token) {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/register" element={<Register onRegister={handleRegister} />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-        <ToastContainer position="bottom-right" theme="dark" />
-      </BrowserRouter>
-    )
-  }
-
   return (
     <BrowserRouter>
-      <Layout user={user} onLogout={handleLogout}>
-        <Routes>
-          <Route path="/" element={<Home api={api} />} />
-          <Route path="/usuarios" element={<Usuarios api={api} />} />
-          <Route path="/peliculas" element={<Peliculas api={api} user={user} />} />
-          <Route path="/favoritos" element={<Favoritos api={api} user={user} />} />
-          <Route path="/estadisticas" element={<Stats api={api} />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        {/* Rutas públicas (con PublicLayout para mostrar Home con botones Auth) */}
+        <Route element={<PublicLayout user={user} onLogout={handleLogout} onAuthClick={() => {}} />}>
+          <Route path="/" element={<Home api={api} user={user} />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register onRegister={handleRegister} />} />
+        </Route>
+
+        {/* Rutas protegidas (requieren autenticación) */}
+        {token ? (
+          <Route element={<Layout user={user} onLogout={handleLogout} />}>
+            <Route path="/peliculas" element={<Peliculas api={api} user={user} />} />
+            <Route path="/usuarios" element={<Usuarios api={api} />} />
+            <Route path="/favoritos" element={<Favoritos api={api} user={user} />} />
+            <Route path="/estadisticas" element={<Stats api={api} />} />
+          </Route>
+        ) : null}
+
+        {/* Redirecciones */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
       <ToastContainer position="bottom-right" theme="dark" />
     </BrowserRouter>
   )

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-export default function Home({ api }) {
+export default function Home({ api, user }) {
   const [stats, setStats] = useState({ usuarios: 0, peliculas: 0, favoritos: 0, peliMasPopular: null })
   const [loading, setLoading] = useState(true)
 
@@ -60,21 +60,25 @@ export default function Home({ api }) {
             <h3>Catálogo de Películas</h3>
             <p>Explora nuestro catálogo completo</p>
           </a>
-          <a href="/usuarios" className="featured-card">
-            <div className="featured-icon">👥</div>
-            <h3>Gestionar Usuarios</h3>
-            <p>Administra tus usuarios</p>
-          </a>
-          <a href="/favoritos" className="featured-card">
-            <div className="featured-icon">⭐</div>
-            <h3>Mis Favoritos</h3>
-            <p>Accede a tus películas favoritas</p>
-          </a>
-          <a href="/estadisticas" className="featured-card">
-            <div className="featured-icon">📊</div>
-            <h3>Estadísticas</h3>
-            <p>Visualiza datos y reportes</p>
-          </a>
+          {user && (
+            <>
+              <a href="/usuarios" className="featured-card">
+                <div className="featured-icon">👥</div>
+                <h3>Gestionar Usuarios</h3>
+                <p>Administra tus usuarios</p>
+              </a>
+              <a href="/favoritos" className="featured-card">
+                <div className="featured-icon">⭐</div>
+                <h3>Mis Favoritos</h3>
+                <p>Accede a tus películas favoritas</p>
+              </a>
+              <a href="/estadisticas" className="featured-card">
+                <div className="featured-icon">📊</div>
+                <h3>Estadísticas</h3>
+                <p>Visualiza datos y reportes</p>
+              </a>
+            </>
+          )}
         </div>
       </section>
     </div>
