@@ -1,30 +1,80 @@
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
-export default function Favorites({ api, token, user }) {
-  const [favs, setFavs] = useState([])
+export default function Favoritos({ api, user }) {
+  const [favoritos, setFavoritos] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user?.id) load()
+    loadFavoritos()
   }, [user])
 
-  const load = async () => {
+  const loadFavoritos = async () => {
     try {
+      setLoading(true)
       const data = await api.favoritosPorUsuario(user.id)
-      setFavs(data)
+      setFavoritos(data)
     } catch (err) {
-      console.error(err)
+      toast.error('Error al cargar favoritos')
+    } finally {
+      setLoading(false)
     }
   }
 
+  const handleRemove = async (favorito_id) => {
+    if (confirm('¿Remover de favoritos?')) {
+      try {
+        await api.eliminarFavorito(favorito_id)
+        toast.success('Removido de favoritos')
+        loadFavoritos()
+      } catch (err) {
+        toast.error('Error al remover')
+      }
+    }
+  }
+
+  if (loading) return <div className="loading">Cargando...</div>
+
   return (
-    <section className="favorites-section">
-      <h2>Tus Favoritos</h2>
-      <div className="favorites-list">
-        {favs.length === 0 && <div className="muted">No hay favoritos aún.</div>}
-        {favs.map(f => (
-          <div key={f.id} className="fav-item">ID Película: {f.id_pelicula}</div>
-        ))}
+    <div className="page-container">
+      <div className="page-header">
+        <h1>Mis Favoritos</h1>
+        <span className="counter">{favoritos.length}</span>
       </div>
-    </section>
+
+      {favoritos.length === 0 ? (
+        <div className="empty-state">
+          <h2>Sin favoritos aún</h2>
+          <p>Marca películas como favoritas para que aparezcan aquí</p>
+        </div>
+      ) : (
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Película</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {favoritos.map((f) => (
+                <tr key={f.id}>
+                  <td>{f.id}</td>
+                  <td>Película #{f.id_pelicula}</td>
+                  <td>{new Date(f.fecha_marcado).toLocaleDateString()}</td>
+                  <td>
+                    <button className="btn btn-sm btn-danger" onClick={() => handleRemove(f.id)}>
+                      Remover
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   )
 }

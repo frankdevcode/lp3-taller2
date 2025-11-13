@@ -14,8 +14,8 @@ const setAuthToken = (token) => {
   else delete instance.defaults.headers.common['Authorization']
 }
 
+// AUTH
 const login = async (correo, password) => {
-  // Backend expects form-data for OAuth2PasswordRequestForm
   const data = new URLSearchParams()
   data.append('username', correo)
   data.append('password', password)
@@ -30,7 +30,40 @@ const register = async (correo, password) => {
   return resp.data
 }
 
-const fetchPeliculas = async (params) => {
+const getCurrentUser = async (token) => {
+  setAuthToken(token)
+  const resp = await instance.get('/auth/me')
+  return resp.data
+}
+
+// USUARIOS
+const fetchUsuarios = async (params = {}) => {
+  const resp = await instance.get('/usuarios', { params })
+  return resp.data
+}
+
+const getUsuario = async (id) => {
+  const resp = await instance.get(`/usuarios/${id}`)
+  return resp.data
+}
+
+const createUsuario = async (usuario) => {
+  const resp = await instance.post('/usuarios', usuario)
+  return resp.data
+}
+
+const updateUsuario = async (id, usuario) => {
+  const resp = await instance.patch(`/usuarios/${id}`, usuario)
+  return resp.data
+}
+
+const deleteUsuario = async (id) => {
+  const resp = await instance.delete(`/usuarios/${id}`)
+  return resp.data
+}
+
+// PELICULAS
+const fetchPeliculas = async (params = {}) => {
   const resp = await instance.get('/peliculas', { params })
   return resp.data
 }
@@ -40,8 +73,28 @@ const getPelicula = async (id) => {
   return resp.data
 }
 
-const marcarFavorito = async (usuario_id, pelicula_id, token) => {
-  setAuthToken(token)
+const createPelicula = async (pelicula) => {
+  const resp = await instance.post('/peliculas', pelicula)
+  return resp.data
+}
+
+const updatePelicula = async (id, pelicula) => {
+  const resp = await instance.patch(`/peliculas/${id}`, pelicula)
+  return resp.data
+}
+
+const deletePelicula = async (id) => {
+  const resp = await instance.delete(`/peliculas/${id}`)
+  return resp.data
+}
+
+const searchPeliculas = async (params = {}) => {
+  const resp = await instance.get('/peliculas/buscar', { params })
+  return resp.data
+}
+
+// FAVORITOS
+const marcarFavorito = async (usuario_id, pelicula_id) => {
   const resp = await instance.post(`/usuarios/${usuario_id}/favoritos/${pelicula_id}`)
   return resp.data
 }
@@ -51,13 +104,29 @@ const favoritosPorUsuario = async (usuario_id) => {
   return resp.data
 }
 
+const eliminarFavorito = async (favorito_id) => {
+  const resp = await instance.delete(`/favoritos/${favorito_id}`)
+  return resp.data
+}
+
 export default {
   instance,
   setAuthToken,
   login,
   register,
+  getCurrentUser,
+  fetchUsuarios,
+  getUsuario,
+  createUsuario,
+  updateUsuario,
+  deleteUsuario,
   fetchPeliculas,
   getPelicula,
+  createPelicula,
+  updatePelicula,
+  deletePelicula,
+  searchPeliculas,
   marcarFavorito,
   favoritosPorUsuario,
+  eliminarFavorito,
 }

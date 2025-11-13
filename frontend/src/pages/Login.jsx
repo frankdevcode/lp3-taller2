@@ -1,35 +1,62 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-export default function Login({ onLogin, api }) {
+export default function Login({ onLogin }) {
   const [correo, setCorreo] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true)
     try {
-      const data = await api.login(correo, password)
-      // data: { access_token, token_type }
-      const token = data.access_token
-      api.setAuthToken(token)
-      // Backend token encodes sub=correo; we store user minimal info
-      onLogin({ token, user: { correo } })
+      await onLogin(correo, password)
+      toast.success('¡Sesión iniciada!')
+      navigate('/')
     } catch (err) {
-      setError(err?.response?.data?.detail || 'Error en login')
+      const msg = err?.response?.data?.detail || 'Error en login'
+      toast.error(msg)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <form className="card auth" onSubmit={submit}>
-      <h2>Iniciar sesión</h2>
-      {error && <div className="alert">{error}</div>}
-      <label>Correo
-        <input value={correo} onChange={e => setCorreo(e.target.value)} type="email" required />
-      </label>
-      <label>Contraseña
-        <input value={password} onChange={e => setPassword(e.target.value)} type="password" required />
-      </label>
-      <button className="btn" type="submit">Entrar</button>
-    </form>
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1>CineLab</h1>
+          <h2>Iniciar Sesión</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Correo Electrónico</label>
+              <input
+                type="email"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                required
+                placeholder="tu@email.com"
+              />
+            </div>
+            <div className="form-group">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Cargando...' : 'Entrar'}
+            </button>
+          </form>
+          <p>¿No tienes cuenta? <a href="/register">Crear cuenta</a></p>
+        </div>
+      </div>
+    </div>
   )
 }
