@@ -1,7 +1,29 @@
 import { useState, useEffect } from 'react'
-import { AlertCircle, Play, Info } from 'lucide-react'
 import api from '../api'
 import '../styles/hero.css'
+
+// SVG Icons as inline components
+const AlertCircle = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+)
+
+const Play = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <polygon points="5 3 19 12 5 21 5 3" />
+  </svg>
+)
+
+const Info = ({ size = 24, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="16" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12.01" y2="8" />
+  </svg>
+)
 
 export default function HeroSection() {
   const [featuredMovie, setFeaturedMovie] = useState(null)
