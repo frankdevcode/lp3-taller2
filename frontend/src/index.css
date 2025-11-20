@@ -1,0 +1,340 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0d0d0d;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Webkit scrollbar styling */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f1f1f;
+  border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+::selection {
+  background-color: #ff6b35;
+  color: #ffffff;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-in-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 9999px;
+  height: 3rem;
+  width: 3rem;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-top-color: #ff6b35;
+  border-bottom-color: #ff6b35;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.shadow-glow {
+  box-shadow: 0 10px 15px -3px rgba(255, 107, 53, 0.5);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #ff6b35, #004e89);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.movie-card {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #1f1f1f;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.btn-primary {
+  background-color: #ff6b35;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: rgba(255, 107, 53, 0.9);
+}
+
+.btn-secondary {
+  background-color: #004e89;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(0, 78, 137, 0.9);
+}
+
+/* Smooth transitions */
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Form styles */
+input,
+textarea,
+select {
+  background-color: #2e2e2e;
+  border: 1px solid #333333;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder,
+select {
+  color: #666666;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #ff6b35;
+  border-color: transparent;
+}
+
+/* Link styles */
+a {
+  color: #ff6b35;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Utility for muted foreground */
+.text-muted-foreground {
+  color: #999999;
+}
+
+.bg-muted-foreground {
+  background-color: #999999;
+}
+
+/* Card styles */
+.bg-card {
+  background-color: #1f1f1f;
+}
+
+/* Border colors */
+.border-border {
+  border-color: #333333;
+}
+
+/* Primary and secondary colors */
+.bg-primary {
+  background-color: #ff6b35;
+}
+
+.text-primary {
+  color: #ff6b35;
+}
+
+.text-primary-foreground {
+  color: #ffffff;
+}
+
+.bg-secondary {
+  background-color: #004e89;
+}
+
+.text-secondary {
+  color: #004e89;
+}
+
+.text-secondary-foreground {
+  color: #ffffff;
+}
+
+/* Display utilities that might be missing */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Additional hover effects */
+.hover\:text-primary:hover {
+  color: #ff6b35;
+}
+
+.hover\:bg-card\/50:hover {
+  background-color: rgba(31, 31, 31, 0.5);
+}
+
+.hover\:border-primary:hover {
+  border-color: #ff6b35;
+}
+
+.hover\:border-secondary:hover {
+  border-color: #004e89;
+}
+
+/* Shadow utilities */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Text utilities */
+.text-foreground {
+  color: #ffffff;
+}
+
+.text-background {
+  background-color: #0d0d0d;
+}
+
+/* Input focus ring */
+.focus-ring-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1), 0 0 0 2px #ff6b35;
+}
+
+/* Smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Ensure proper stacking context */
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.sticky {
+  position: sticky;
+}
+
+/* Z-index utilities */
+.z-50 {
+  z-index: 50;
+}
+
+/* Max width container */
+.container-max {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
